@@ -1,26 +1,38 @@
 import createDataContext from "./createDataContext";
+import trackerApi from "../api/tracker";
+import { AsyncStorage } from "react-native";
 
 const authReducer = (state, action) => {
   switch (action.type) {
+    case "add_error":
+      return { ...state, errorMessage: action.payload };
+    case "signup":
+      return {errorMessage: '', token: action.payload}  
     default:
       return state;
   }
 };
 
-const signup = (dispatch) => {
-  return ({ email, password }) => {
-    //make api request to sign up with email and password
-    //if we sign up, modify our state, and say we are authenticated
-    //if signin up fails, reflect error message
-  };
-};
+const signup = (dispatch) =>  async ({ email, password }) => {
+    try {
+      //make api request to sign in with email and password
+      const response = await trackerApi.post("/signup", { email, password });
+      await AsyncStorage.setItem("token", response.data.token);
+      dispatch({ type: "signup", payload: response.data.token });
 
-const signip = (dispatch) => {
-  return ({ email, password }) => {
-    //make api request to sign in with email and password
-    //Handle success
-    //Handle fail
+      //navigate to main flow
+
+    } catch (e) {
+      dispatch({
+        type: "add_error",
+        payload: "Something went wrong with sign up",
+      });
+    }
   };
+
+
+const signin = (dispatch) => {
+  return async ({ email, password }) => {};
 };
 
 const signout = (dispatch) => {
@@ -31,6 +43,6 @@ const signout = (dispatch) => {
 
 export const { Provider, Context } = createDataContext(
   authReducer,
-  { signup, signip, signout },
-  { isSignedIn: false }
+  { signup, signin, signout },
+  { token: null, errorMessage: "" }
 );
