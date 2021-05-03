@@ -5,22 +5,21 @@ import { Context as AuthContext } from "../context/AuthContext";
 import AuthForm from "../components/AuthForm";
 import NavLink from "../components/NavLink";
 
-
 /**
  *  NavigationEvents
  *  onWillFocus = when about to navigate
- *  onDidFocus = 
+ *  onDidFocus =
  *  onWillBlur = navigate away from screen
- *  onDidBlur = as soon as the transition 
+ *  onDidBlur = as soon as the transition
  *
  */
 
-const SignupScreen = ({ navigation }) => {
+const SignupScreen = ({}) => {
   const { state, signup, clearErrorMessage } = useContext(AuthContext);
 
   return (
     <View style={styles.container}>
-      <NavigationEvents onWillFocus={clearErrorMessage}/>  
+      <NavigationEvents onWillFocus={clearErrorMessage} />
       <AuthForm
         headerText="Sign Up for Tracker"
         errorMessage={state.errorMessage}
